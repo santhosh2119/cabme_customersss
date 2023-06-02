@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "155405230197",
+    "project_id": "cabme-b1eca",
+    "storage_bucket": "cabme-b1eca.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:155405230197:android:41a04dae4e6cc4c771983c",
+        "android_client_info": {
+          "package_name": "com.cabme.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "155405230197-m3q39o2i138nnl84d09cfgdfo6dea5jk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cabme.android",
+            "certificate_hash": "fc381c3fa6eec61030449fe915a569431bf37e40"
+          }
+        },
+        {
+          "client_id": "155405230197-s4pd7audvndbqe8k8ng1ql8rsbad9l3g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDhxkW4U-i02jeSbQ8AJBAjt95IGmlPB2w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "155405230197-s4pd7audvndbqe8k8ng1ql8rsbad9l3g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
