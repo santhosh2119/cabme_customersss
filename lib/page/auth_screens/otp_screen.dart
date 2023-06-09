@@ -21,7 +21,8 @@ class OtpScreen extends StatelessWidget {
   String? phoneNumber;
   String? verificationId;
 
-  OtpScreen({Key? key, required this.phoneNumber, required this.verificationId}) : super(key: key);
+  OtpScreen({Key? key, required this.phoneNumber, required this.verificationId})
+      : super(key: key);
 
   final controller = Get.put(PhoneNumberController());
   final textEditingController = TextEditingController();
@@ -33,12 +34,12 @@ class OtpScreen extends StatelessWidget {
       body: SafeArea(
         child: Container(
           height: Get.height,
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("assets/images/login_bg.png"),
-              fit: BoxFit.cover,
-            ),
-          ),
+          // decoration: const BoxDecoration(
+          //   image: DecorationImage(
+          //     image: AssetImage("assets/images/login_bg.png"),
+          //     fit: BoxFit.cover,
+          //   ),
+          // ),
           child: Stack(
             children: [
               Center(
@@ -49,12 +50,16 @@ class OtpScreen extends StatelessWidget {
                       children: [
                         Text(
                           "Enter OTP".tr,
-                          style: const TextStyle(letterSpacing: 0.60, fontSize: 22, color: Colors.black, fontWeight: FontWeight.w600),
+                          style: const TextStyle(
+                              letterSpacing: 0.60,
+                              fontSize: 22,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w600),
                         ),
                         SizedBox(
                             width: 80,
                             child: Divider(
-                              color: ConstantColors.yellow1,
+                              color: Color(0xFFED6D5C),
                               thickness: 3,
                             )),
                         Padding(
@@ -67,8 +72,10 @@ class OtpScreen extends StatelessWidget {
                               fieldHeight: 50,
                               fieldWidth: 50,
                               activeColor: ConstantColors.textFieldBoarderColor,
-                              selectedColor: ConstantColors.textFieldBoarderColor,
-                              inactiveColor: ConstantColors.textFieldBoarderColor,
+                              selectedColor:
+                                  ConstantColors.textFieldBoarderColor,
+                              inactiveColor:
+                                  ConstantColors.textFieldBoarderColor,
                               activeFillColor: Colors.white,
                               inactiveFillColor: Colors.white,
                               selectedFillColor: Colors.white,
@@ -97,41 +104,69 @@ class OtpScreen extends StatelessWidget {
 
                                 if (textEditingController.text.length == 6) {
                                   ShowToastDialog.showLoader("Verify OTP");
-                                  PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: verificationId.toString(), smsCode: textEditingController.text);
-                                  await FirebaseAuth.instance.signInWithCredential(credential).then((value) async {
+                                  PhoneAuthCredential credential =
+                                      PhoneAuthProvider.credential(
+                                          verificationId:
+                                              verificationId.toString(),
+                                          smsCode: textEditingController.text);
+                                  await FirebaseAuth.instance
+                                      .signInWithCredential(credential)
+                                      .then((value) async {
                                     Map<String, String> bodyParams = {
                                       'phone': phoneNumber.toString(),
                                       'user_cat': "customer",
                                     };
-                                    await controller.phoneNumberIsExit(bodyParams).then((value) async {
+                                    await controller
+                                        .phoneNumberIsExit(bodyParams)
+                                        .then((value) async {
                                       if (value == true) {
                                         Map<String, String> bodyParams = {
                                           'phone': phoneNumber.toString(),
                                           'user_cat': "customer",
                                         };
-                                        await controller.getDataByPhoneNumber(bodyParams).then((value) {
+                                        await controller
+                                            .getDataByPhoneNumber(bodyParams)
+                                            .then((value) {
                                           if (value != null) {
                                             if (value.success == "success") {
                                               ShowToastDialog.closeLoader();
 
-                                              Preferences.setInt(Preferences.userId, value.data!.id!);
-                                              Preferences.setString(Preferences.user, jsonEncode(value));
-                                              Preferences.setString(Preferences.accesstoken, value.data!.accesstoken.toString());
-                                              Preferences.setString(Preferences.admincommission, value.data!.adminCommission.toString());
-                                              API.header['accesstoken'] = Preferences.getString(Preferences.accesstoken);
+                                              Preferences.setInt(
+                                                  Preferences.userId,
+                                                  value.data!.id!);
+                                              Preferences.setString(
+                                                  Preferences.user,
+                                                  jsonEncode(value));
+                                              Preferences.setString(
+                                                  Preferences.accesstoken,
+                                                  value.data!.accesstoken
+                                                      .toString());
+                                              Preferences.setString(
+                                                  Preferences.admincommission,
+                                                  value.data!.adminCommission
+                                                      .toString());
+                                              API.header['accesstoken'] =
+                                                  Preferences.getString(
+                                                      Preferences.accesstoken);
 
-                                              if (value.data!.photo == null || value.data!.photoPath.toString().isEmpty) {
-                                                Get.to(() => AddProfilePhotoScreen());
+                                              if (value.data!.photo == null ||
+                                                  value.data!.photoPath
+                                                      .toString()
+                                                      .isEmpty) {
+                                                Get.to(() =>
+                                                    AddProfilePhotoScreen());
                                               } else {
-                                                Preferences.setBoolean(Preferences.isLogin, true);
+                                                Preferences.setBoolean(
+                                                    Preferences.isLogin, true);
                                                 Get.offAll(DashBoard());
                                               }
                                             } else {
-                                              ShowToastDialog.showToast(value.error);
+                                              ShowToastDialog.showToast(
+                                                  value.error);
                                             }
                                           }
                                         });
-                                      } else if(value == false){
+                                      } else if (value == false) {
                                         ShowToastDialog.closeLoader();
                                         Get.off(SignupScreen(
                                           phoneNumber: phoneNumber.toString(),
@@ -140,7 +175,8 @@ class OtpScreen extends StatelessWidget {
                                     });
                                   }).catchError((error) {
                                     ShowToastDialog.closeLoader();
-                                    ShowToastDialog.showToast("Code is Invalid");
+                                    ShowToastDialog.showToast(
+                                        "Code is Invalid");
                                   });
                                 } else {
                                   ShowToastDialog.showToast("Please Enter OTP");

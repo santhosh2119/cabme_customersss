@@ -71,4 +71,5 @@ const Map<String, String> deGR = {
   'submit_query_message': "Senden Sie Ihre Anfrage",
   'term_service': "Servicevoorwaarden",
   'privacy_policy': "Datenschutz-Bestimmungen",
+  'my_ride': "My Rides"
 };

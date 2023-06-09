@@ -145,112 +145,112 @@ class MyProfileScreen extends StatelessWidget {
                             subtitle: myProfileController.name.toString(),
                             title: "First Name",
                             iconData: Icons.person_outline,
-                            isEditIcon: true,
+                            isEditIcon: false,
                             onPress: () {
-                              buildAlertChangeData(
-                                context,
-                                onSubmitBtn: () {
-                                  if (fullNameController.text.isNotEmpty) {
-                                    Map<String, String> bodyParams = {
-                                      'id_user':
-                                          Preferences.getInt(Preferences.userId)
-                                              .toString(),
-                                      'user_cat':
-                                          myProfileController.userCat.value,
-                                      'prenom': fullNameController.text,
-                                    };
-                                    myProfileController
-                                        .updateFirstName(bodyParams)
-                                        .then((value) {
-                                      if (value != null) {
-                                        if (value["success"] == "success") {
-                                          UserModel userModel =
-                                              Constant.getUserData();
-                                          userModel.data!.prenom =
-                                              value['data']['prenom'];
-                                          Preferences.setString(
-                                              Preferences.user,
-                                              jsonEncode(userModel.toJson()));
-                                          myProfileController.getUsrData();
-                                          dashboardController.getUsrData();
-                                          ShowToastDialog.showToast(
-                                              value['message']);
-                                          Get.back();
-                                        } else {
-                                          ShowToastDialog.showToast(
-                                              value['error']);
-                                          Get.back();
-                                        }
-                                      }
-                                    });
-                                  } else {
-                                    ShowToastDialog.showToast(
-                                        "Please Enter Name");
-                                  }
-                                },
-                                controller: fullNameController,
-                                title: "First Name",
-                                iconData: Icons.person_outline,
-                                validators: (String? name) {
-                                  return null;
-                                },
-                              );
+                              // buildAlertChangeData(
+                              //   context,
+                              //   onSubmitBtn: () {
+                              //     if (fullNameController.text.isNotEmpty) {
+                              //       Map<String, String> bodyParams = {
+                              //         'id_user':
+                              //             Preferences.getInt(Preferences.userId)
+                              //                 .toString(),
+                              //         'user_cat':
+                              //             myProfileController.userCat.value,
+                              //         'prenom': fullNameController.text,
+                              //       };
+                              //       myProfileController
+                              //           .updateFirstName(bodyParams)
+                              //           .then((value) {
+                              //         if (value != null) {
+                              //           if (value["success"] == "success") {
+                              //             UserModel userModel =
+                              //                 Constant.getUserData();
+                              //             userModel.data!.prenom =
+                              //                 value['data']['prenom'];
+                              //             Preferences.setString(
+                              //                 Preferences.user,
+                              //                 jsonEncode(userModel.toJson()));
+                              //             myProfileController.getUsrData();
+                              //             dashboardController.getUsrData();
+                              //             ShowToastDialog.showToast(
+                              //                 value['message']);
+                              //             Get.back();
+                              //           } else {
+                              //             ShowToastDialog.showToast(
+                              //                 value['error']);
+                              //             Get.back();
+                              //           }
+                              //         }
+                              //       });
+                              //     } else {
+                              //       ShowToastDialog.showToast(
+                              //           "Please Enter Name");
+                              //     }
+                              //   },
+                              //   controller: fullNameController,
+                              //   title: "First Name",
+                              //   iconData: Icons.person_outline,
+                              //   validators: (String? name) {
+                              //     return null;
+                              //   },
+                              // );
                             },
                           ),
                           buildShowDetails(
                             subtitle: myProfileController.lastName.toString(),
                             title: "Last Name",
                             iconData: Icons.person_outline,
-                            isEditIcon: true,
+                            isEditIcon: false,
                             onPress: () {
-                              buildAlertChangeData(
-                                context,
-                                onSubmitBtn: () {
-                                  if (lastNameController.text.isNotEmpty) {
-                                    Map<String, String> bodyParams = {
-                                      'id_user':
-                                          Preferences.getInt(Preferences.userId)
-                                              .toString(),
-                                      'user_cat':
-                                          myProfileController.userCat.value,
-                                      'nom': lastNameController.text,
-                                    };
-                                    myProfileController
-                                        .updateLastName(bodyParams)
-                                        .then((value) {
-                                      if (value != null) {
-                                        if (value["success"] == "success") {
-                                          UserModel userModel =
-                                              Constant.getUserData();
-                                          userModel.data!.nom =
-                                              value['data']['nom'];
-                                          Preferences.setString(
-                                              Preferences.user,
-                                              jsonEncode(userModel.toJson()));
-                                          myProfileController.getUsrData();
-                                          dashboardController.getUsrData();
-                                          ShowToastDialog.showToast(
-                                              value['message']);
-                                          Get.back();
-                                        } else {
-                                          ShowToastDialog.showToast(
-                                              value['error']);
-                                          Get.back();
-                                        }
-                                      }
-                                    });
-                                  } else {
-                                    ShowToastDialog.showToast(
-                                        "Please Enter Name");
-                                  }
-                                },
-                                controller: lastNameController,
-                                title: "Last Name",
-                                iconData: Icons.person_outline,
-                                validators: (String? name) {
-                                  return null;
-                                },
-                              );
+                              // buildAlertChangeData(
+                              //   context,
+                              //   onSubmitBtn: () {
+                              //     if (lastNameController.text.isNotEmpty) {
+                              //       Map<String, String> bodyParams = {
+                              //         'id_user':
+                              //             Preferences.getInt(Preferences.userId)
+                              //                 .toString(),
+                              //         'user_cat':
+                              //             myProfileController.userCat.value,
+                              //         'nom': lastNameController.text,
+                              //       };
+                              //       myProfileController
+                              //           .updateLastName(bodyParams)
+                              //           .then((value) {
+                              //         if (value != null) {
+                              //           if (value["success"] == "success") {
+                              //             UserModel userModel =
+                              //                 Constant.getUserData();
+                              //             userModel.data!.nom =
+                              //                 value['data']['nom'];
+                              //             Preferences.setString(
+                              //                 Preferences.user,
+                              //                 jsonEncode(userModel.toJson()));
+                              //             myProfileController.getUsrData();
+                              //             dashboardController.getUsrData();
+                              //             ShowToastDialog.showToast(
+                              //                 value['message']);
+                              //             Get.back();
+                              //           } else {
+                              //             ShowToastDialog.showToast(
+                              //                 value['error']);
+                              //             Get.back();
+                              //           }
+                              //         }
+                              //       });
+                              //     } else {
+                              //       ShowToastDialog.showToast(
+                              //           "Please Enter Name");
+                              //     }
+                              //   },
+                              //   controller: lastNameController,
+                              //   title: "Last Name",
+                              //   iconData: Icons.person_outline,
+                              //   validators: (String? name) {
+                              //     return null;
+                              //   },
+                              // );
                             },
                           ),
                           buildShowDetails(

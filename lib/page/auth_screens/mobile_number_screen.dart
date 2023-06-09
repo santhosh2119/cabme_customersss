@@ -21,14 +21,14 @@ class MobileNumberScreen extends StatelessWidget {
       body: SafeArea(
         child: Container(
           height: Get.height,
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(
-                "assets/images/login_bg.png",
-              ),
-              fit: BoxFit.cover,
-            ),
-          ),
+          // decoration: const BoxDecoration(
+          //   image: DecorationImage(
+          //     image: AssetImage(
+          //       "assets/images/login_bg.png",
+          //     ),
+          //     fit: BoxFit.cover,
+          //   ),
+          // ),
           child: Stack(
             children: [
               Center(
@@ -49,7 +49,7 @@ class MobileNumberScreen extends StatelessWidget {
                         SizedBox(
                             width: 80,
                             child: Divider(
-                              color: ConstantColors.yellow1,
+                              color: Color(0xFFED6D5C),
                               thickness: 3,
                             )),
                         Padding(

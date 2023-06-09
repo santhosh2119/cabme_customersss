@@ -36,12 +36,12 @@ class SignupScreen extends StatelessWidget {
       backgroundColor: ConstantColors.background,
       body: SafeArea(
         child: Container(
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("assets/images/login_bg.png"),
-              fit: BoxFit.cover,
-            ),
-          ),
+          // decoration: const BoxDecoration(
+          //   image: DecorationImage(
+          //     image: AssetImage("assets/images/login_bg.png"),
+          //     fit: BoxFit.cover,
+          //   ),
+          // ),
           child: Stack(
             children: [
               Center(
@@ -56,12 +56,16 @@ class SignupScreen extends StatelessWidget {
                         children: [
                           Text(
                             "Sign up".tr.toUpperCase(),
-                            style: const TextStyle(letterSpacing: 0.60, fontSize: 22, color: Colors.black, fontWeight: FontWeight.w600),
+                            style: const TextStyle(
+                                letterSpacing: 0.60,
+                                fontSize: 22,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w600),
                           ),
                           SizedBox(
                               width: 80,
                               child: Divider(
-                                color: ConstantColors.yellow1,
+                                color: Color(0xFFED6D5C),
                                 thickness: 3,
                               )),
                           const SizedBox(
@@ -132,7 +136,9 @@ class SignupScreen extends StatelessWidget {
                               textInputType: TextInputType.emailAddress,
                               contentPadding: EdgeInsets.zero,
                               validators: (String? value) {
-                                bool emailValid = RegExp(r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$').hasMatch(value!);
+                                bool emailValid = RegExp(
+                                        r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$')
+                                    .hasMatch(value!);
                                 if (!emailValid) {
                                   return 'email not valid'.tr;
                                 } else {
@@ -169,7 +175,8 @@ class SignupScreen extends StatelessWidget {
                                 if (value!.length >= 6) {
                                   return null;
                                 } else {
-                                  return 'Password required at least 6 characters'.tr;
+                                  return 'Password required at least 6 characters'
+                                      .tr;
                                 }
                               },
                             ),
@@ -203,8 +210,12 @@ class SignupScreen extends StatelessWidget {
                                   FocusScope.of(context).unfocus();
                                   if (_formKey.currentState!.validate()) {
                                     Map<String, String> bodyParams = {
-                                      'firstname': _firstNameController.text.trim().toString(),
-                                      'lastname': _lastNameController.text.trim().toString(),
+                                      'firstname': _firstNameController.text
+                                          .trim()
+                                          .toString(),
+                                      'lastname': _lastNameController.text
+                                          .trim()
+                                          .toString(),
                                       'phone': _phoneController.text.trim(),
                                       'email': _emailController.text.trim(),
                                       'password': _passwordController.text,
@@ -213,14 +224,20 @@ class SignupScreen extends StatelessWidget {
                                       'tonotify': 'yes',
                                       'account_type': 'customer',
                                     };
-                                    await controller.signUp(bodyParams).then((value) {
+                                    await controller
+                                        .signUp(bodyParams)
+                                        .then((value) {
                                       if (value != null) {
                                         if (value.success == "success") {
-                                          Preferences.setInt(Preferences.userId, value.data!.id!);
-                                          Preferences.setString(Preferences.user, jsonEncode(value));
+                                          Preferences.setInt(Preferences.userId,
+                                              value.data!.id!);
+                                          Preferences.setString(
+                                              Preferences.user,
+                                              jsonEncode(value));
                                           Get.to(AddProfilePhotoScreen());
                                         } else {
-                                          ShowToastDialog.showToast(value.error);
+                                          ShowToastDialog.showToast(
+                                              value.error);
                                         }
                                       }
                                     });
@@ -279,22 +296,31 @@ class SignupScreen extends StatelessWidget {
                 children: [
                   TextSpan(
                     text: 'Already have an account? ',
-                    style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
+                    style: const TextStyle(
+                        color: Colors.black, fontWeight: FontWeight.w500),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {
                         Get.offAll(LoginScreen(),
-                            duration: const Duration(milliseconds: 400), //duration of transitions, default 1 sec
-                            transition: Transition.rightToLeft); //transition effect);
+                            duration: const Duration(
+                                milliseconds:
+                                    400), //duration of transitions, default 1 sec
+                            transition:
+                                Transition.rightToLeft); //transition effect);
                       },
                   ),
                   TextSpan(
                     text: 'LOGIN',
-                    style: TextStyle(fontWeight: FontWeight.bold, color: ConstantColors.primary),
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: ConstantColors.primary),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {
                         Get.offAll(LoginScreen(),
-                            duration: const Duration(milliseconds: 400), //duration of transitions, default 1 sec
-                            transition: Transition.rightToLeft); //transition effect);
+                            duration: const Duration(
+                                milliseconds:
+                                    400), //duration of transitions, default 1 sec
+                            transition:
+                                Transition.rightToLeft); //transition effect);
                       },
                   ),
                 ],

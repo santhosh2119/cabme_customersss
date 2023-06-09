@@ -62,13 +62,13 @@ class DashBoardController extends GetxController {
   final drawerItems = [
     DrawerItem('home'.tr, CupertinoIcons.home),
     DrawerItem('favorite_ride'.tr, CupertinoIcons.star),
-    DrawerItem('new_ride'.tr, Icons.local_car_wash),
-    DrawerItem('confirmed'.tr, CupertinoIcons.checkmark_circle),
-    DrawerItem('on_ride'.tr, Icons.directions_boat_outlined),
-    DrawerItem("completed".tr, Icons.incomplete_circle),
-    DrawerItem('canceled'.tr, Icons.cancel_outlined),
-    DrawerItem('rent_a_vehicle'.tr, Icons.car_rental),
-    DrawerItem('rented_vehicle'.tr, Icons.car_rental),
+    // DrawerItem('new_ride'.tr, Icons.local_car_wash),
+    // DrawerItem('confirmed'.tr, CupertinoIcons.checkmark_circle),
+    // DrawerItem('on_ride'.tr, Icons.directions_boat_outlined),
+    DrawerItem("my_ride".tr, Icons.incomplete_circle),
+    // DrawerItem('canceled'.tr, Icons.cancel_outlined),
+    // DrawerItem('rent_a_vehicle'.tr, Icons.car_rental),
+    // DrawerItem('rented_vehicle'.tr, Icons.car_rental),
     DrawerItem('promo_code'.tr, Icons.discount),
     DrawerItem('my_wallet'.tr, Icons.account_balance_wallet_outlined),
     DrawerItem('my_profile'.tr, Icons.person_outline),
@@ -86,35 +86,36 @@ class DashBoardController extends GetxController {
         return const HomeScreen();
       case 1:
         return const FavoriteRideScreen();
+      // return const CompletedRideScreen();
+      // case 2:
+      //   return const NewRideScreen();
+      // case 3:
+      //   return const ConfirmedRideScreen();
+      // case 4:
+      //   return OnRideScreens();
       case 2:
-        return const NewRideScreen();
-      case 3:
-        return const ConfirmedRideScreen();
-      case 4:
-        return OnRideScreens();
-      case 5:
         return const CompletedRideScreen();
-      case 6:
-        return const CanceledRideScreens();
-      case 7:
-        return RentVehicleScreen();
-      case 8:
-        return const RentedVehicleScreen();
-      case 9:
+      // case 6:
+      //   return const CanceledRideScreens();
+      // case 7:
+      //   return RentVehicleScreen();
+      // case 8:
+      //   return const RentedVehicleScreen();
+      case 3:
         return const CouponCodeScreen();
-      case 10:
+      case 4:
         return WalletScreen();
-      case 11:
+      case 5:
         return MyProfileScreen();
-      case 12:
+      case 6:
         return const LocalizationScreens(
           intentType: "dashBoard",
         );
-      case 13:
+      case 7:
         return const TermsOfServiceScreen();
-      case 14:
+      case 8:
         return const PrivacyPolicyScreen();
-      case 15:
+      case 9:
         return const ContactUsScreen();
 
       default:
@@ -123,12 +124,12 @@ class DashBoardController extends GetxController {
   }
 
   onSelectItem(int index) {
-    if (index == 16) {
+    if (index == 10) {
       LaunchReview.launch(
         androidAppId: "com.cabme.android",
         iOSAppId: "com.cabme.ios",
       );
-    } else if (index == 17) {
+    } else if (index == 11) {
       Preferences.clearKeyData(Preferences.isLogin);
       Preferences.clearKeyData(Preferences.user);
       Preferences.clearKeyData(Preferences.userId);
@@ -141,14 +142,21 @@ class DashBoardController extends GetxController {
 
   Future<dynamic> updateFCMToken(String token) async {
     try {
-      Map<String, dynamic> bodyParams = {'user_id': Preferences.getInt(Preferences.userId), 'fcm_id': token, 'device_id': "", 'user_cat': userModel!.data!.userCat};
-      final response = await http.post(Uri.parse(API.updateToken), headers: API.header, body: jsonEncode(bodyParams));
+      Map<String, dynamic> bodyParams = {
+        'user_id': Preferences.getInt(Preferences.userId),
+        'fcm_id': token,
+        'device_id': "",
+        'user_cat': userModel!.data!.userCat
+      };
+      final response = await http.post(Uri.parse(API.updateToken),
+          headers: API.header, body: jsonEncode(bodyParams));
 
       Map<String, dynamic> responseBody = json.decode(response.body);
       if (response.statusCode == 200) {
         return responseBody;
       } else {
-        ShowToastDialog.showToast('Something want wrong. Please try again later');
+        ShowToastDialog.showToast(
+            'Something want wrong. Please try again later');
         throw Exception('Failed to load album');
       }
     } on TimeoutException catch (e) {
@@ -165,7 +173,8 @@ class DashBoardController extends GetxController {
 
   Future<dynamic> getPaymentSettingData() async {
     try {
-      final response = await http.get(Uri.parse(API.paymentSetting), headers: API.header);
+      final response =
+          await http.get(Uri.parse(API.paymentSetting), headers: API.header);
 
       debugPrint("---->");
       debugPrint("${API.header}");
@@ -173,10 +182,13 @@ class DashBoardController extends GetxController {
 
       Map<String, dynamic> responseBody = json.decode(response.body);
       if (response.statusCode == 200 && responseBody['success'] == "success") {
-        Preferences.setString(Preferences.paymentSetting, jsonEncode(responseBody));
-      } else if (response.statusCode == 200 && responseBody['success'] == "Failed") {
+        Preferences.setString(
+            Preferences.paymentSetting, jsonEncode(responseBody));
+      } else if (response.statusCode == 200 &&
+          responseBody['success'] == "Failed") {
       } else {
-        ShowToastDialog.showToast('Something want wrong. Please try again later');
+        ShowToastDialog.showToast(
+            'Something want wrong. Please try again later');
         throw Exception('Failed to load album');
       }
     } on TimeoutException catch (e) {

@@ -72,5 +72,6 @@ const Map<String, String> enUS = {
   'message': "Message",
   'submit_query_message': "Submit your Query",
   'term_service': "Terms of Service",
-  'privacy_policy': "Privacy Policy"
+  'privacy_policy': "Privacy Policy",
+  'my_ride': "My Rides"
 };

@@ -31,7 +31,7 @@ class LanguageModel {
 }
 
 class LanguageData {
-  String? id;
+  int? id;
   String? language;
   String? code;
   String? flag;
@@ -65,7 +65,7 @@ class LanguageData {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data =  <String, dynamic>{};
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['language'] = language;
     data['code'] = code;

@@ -25,7 +25,11 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final CameraPosition _kInitialPosition = const CameraPosition(target: LatLng(19.018255973653343, 72.84793849278007), zoom: 11.0, tilt: 0, bearing: 0);
+  final CameraPosition _kInitialPosition = const CameraPosition(
+      target: LatLng(19.018255973653343, 72.84793849278007),
+      zoom: 11.0,
+      tilt: 0,
+      bearing: 0);
 
   final TextEditingController departureController = TextEditingController();
   final TextEditingController destinationController = TextEditingController();
@@ -50,6 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     setIcons();
+    getCurrentLocation(true);
     super.initState();
   }
 
@@ -85,11 +90,19 @@ class _HomeScreenState extends State<HomeScreen> {
       if (value != null) {
         if (value.success == "success") {
           for (var element in value.data!) {
-            if (element.latitude != null && element.longitude != null && element.latitude!.isNotEmpty && element.longitude!.isNotEmpty && element.statut == "yes") {
+            if (element.latitude != null &&
+                element.longitude != null &&
+                element.latitude!.isNotEmpty &&
+                element.longitude!.isNotEmpty &&
+                element.statut == "yes") {
               _markers[element.id.toString()] = Marker(
                 markerId: MarkerId(element.id.toString()),
-                infoWindow: InfoWindow(title: element.prenom.toString(), snippet: "${element.brand},${element.model},${element.numberplate}"),
-                position: LatLng(double.parse(element.latitude ?? "0.0"), double.parse(element.longitude ?? "0.0")),
+                infoWindow: InfoWindow(
+                    title: element.prenom.toString(),
+                    snippet:
+                        "${element.brand},${element.model},${element.numberplate}"),
+                position: LatLng(double.parse(element.latitude ?? "0.0"),
+                    double.parse(element.longitude ?? "0.0")),
                 icon: taxiIcon!,
               );
             }
@@ -107,18 +120,33 @@ class _HomeScreenState extends State<HomeScreen> {
   void getCurrentLocation(bool isDepartureSet) async {
     if (isDepartureSet) {
       LocationData location = await currentLocation.getLocation();
-      List<get_cord_address.Placemark> placeMarks = await get_cord_address.placemarkFromCoordinates(location.latitude ?? 0.0, location.longitude ?? 0.0);
+      List<get_cord_address.Placemark> placeMarks =
+          await get_cord_address.placemarkFromCoordinates(
+              location.latitude ?? 0.0, location.longitude ?? 0.0);
 
-      final address = (placeMarks.first.subLocality!.isEmpty ? '' : "${placeMarks.first.subLocality}, ") +
-          (placeMarks.first.street!.isEmpty ? '' : "${placeMarks.first.street}, ") +
+      final address = (placeMarks.first.subLocality!.isEmpty
+              ? ''
+              : "${placeMarks.first.subLocality}, ") +
+          (placeMarks.first.street!.isEmpty
+              ? ''
+              : "${placeMarks.first.street}, ") +
           (placeMarks.first.name!.isEmpty ? '' : "${placeMarks.first.name}, ") +
-          (placeMarks.first.subAdministrativeArea!.isEmpty ? '' : "${placeMarks.first.subAdministrativeArea}, ") +
-          (placeMarks.first.administrativeArea!.isEmpty ? '' : "${placeMarks.first.administrativeArea}, ") +
-          (placeMarks.first.country!.isEmpty ? '' : "${placeMarks.first.country}, ") +
-          (placeMarks.first.postalCode!.isEmpty ? '' : "${placeMarks.first.postalCode}, ");
+          (placeMarks.first.subAdministrativeArea!.isEmpty
+              ? ''
+              : "${placeMarks.first.subAdministrativeArea}, ") +
+          (placeMarks.first.administrativeArea!.isEmpty
+              ? ''
+              : "${placeMarks.first.administrativeArea}, ") +
+          (placeMarks.first.country!.isEmpty
+              ? ''
+              : "${placeMarks.first.country}, ") +
+          (placeMarks.first.postalCode!.isEmpty
+              ? ''
+              : "${placeMarks.first.postalCode}, ");
       departureController.text = address;
       setState(() {
-        setDepartureMarker(LatLng(location.latitude ?? 0.0, location.longitude ?? 0.0));
+        setDepartureMarker(
+            LatLng(location.latitude ?? 0.0, location.longitude ?? 0.0));
       });
     }
   }
@@ -144,7 +172,9 @@ class _HomeScreenState extends State<HomeScreen> {
             onMapCreated: (GoogleMapController controller) async {
               _controller = controller;
               LocationData location = await currentLocation.getLocation();
-              _controller!.moveCamera(CameraUpdate.newLatLngZoom(LatLng(location.latitude ?? 0.0, location.longitude ?? 0.0), 14));
+              _controller!.moveCamera(CameraUpdate.newLatLngZoom(
+                  LatLng(location.latitude ?? 0.0, location.longitude ?? 0.0),
+                  14));
             },
             polylines: Set<Polyline>.of(polyLines.values),
             myLocationEnabled: true,
@@ -174,11 +204,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 child: Container(
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.white),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.white),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 8.0, horizontal: 10),
                     child: Column(
                       children: [
                         Row(
@@ -189,7 +223,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             Expanded(
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 10),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 10),
                                 child: Column(
                                   children: [
                                     Row(
@@ -197,16 +232,26 @@ class _HomeScreenState extends State<HomeScreen> {
                                         Expanded(
                                           child: InkWell(
                                             onTap: () async {
-                                              await controller.placeSelectAPI(context).then((value) {
+                                              await controller
+                                                  .placeSelectAPI(context)
+                                                  .then((value) {
                                                 if (value != null) {
-                                                  departureController.text = value.result.formattedAddress.toString();
-                                                  setDepartureMarker(LatLng(value.result.geometry!.location.lat, value.result.geometry!.location.lng));
+                                                  departureController.text =
+                                                      value.result
+                                                          .formattedAddress
+                                                          .toString();
+                                                  setDepartureMarker(LatLng(
+                                                      value.result.geometry!
+                                                          .location.lat,
+                                                      value.result.geometry!
+                                                          .location.lng));
                                                 }
                                               });
                                             },
                                             child: buildTextField(
                                               title: "Departure",
-                                              textController: departureController,
+                                              textController:
+                                                  departureController,
                                             ),
                                           ),
                                         ),
@@ -225,10 +270,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                     const Divider(),
                                     InkWell(
                                       onTap: () async {
-                                        await controller.placeSelectAPI(context).then((value) {
+                                        await controller
+                                            .placeSelectAPI(context)
+                                            .then((value) {
                                           if (value != null) {
-                                            destinationController.text = value.result.formattedAddress.toString();
-                                            setDestinationMarker(LatLng(value.result.geometry!.location.lat, value.result.geometry!.location.lng));
+                                            destinationController.text = value
+                                                .result.formattedAddress
+                                                .toString();
+                                            setDestinationMarker(LatLng(
+                                                value.result.geometry!.location
+                                                    .lat,
+                                                value.result.geometry!.location
+                                                    .lng));
                                           }
                                         });
                                       },
@@ -265,7 +318,8 @@ class _HomeScreenState extends State<HomeScreen> {
         icon: departureIcon!,
       );
       departureLatLong = departure;
-      _controller!.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(departure.latitude, departure.longitude), zoom: 14)));
+      _controller!.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+          target: LatLng(departure.latitude, departure.longitude), zoom: 14)));
 
       // _controller?.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(departure.latitude, departure.longitude), zoom: 18)));
       if (departureLatLong != null && destinationLatLong != null) {
@@ -292,7 +346,8 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  Widget buildTextField({required title, required TextEditingController textController}) {
+  Widget buildTextField(
+      {required title, required TextEditingController textController}) {
     return Padding(
       padding: const EdgeInsets.only(left: 8.0),
       child: TextField(
@@ -341,14 +396,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
   conformationBottomSheet(BuildContext context) {
     return showModalBottomSheet(
-        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topRight: Radius.circular(15), topLeft: Radius.circular(15))),
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                topRight: Radius.circular(15), topLeft: Radius.circular(15))),
         context: context,
         isDismissible: false,
         backgroundColor: Colors.transparent,
         builder: (context) {
           return StatefulBuilder(builder: (context, setState) {
             return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 20),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 15.0, vertical: 20),
               child: Row(
                 children: [
                   Padding(
@@ -366,32 +424,63 @@ class _HomeScreenState extends State<HomeScreen> {
                     }),
                   ),
                   Expanded(
-                    child: ButtonThem.buildButton(context, btnHeight: 40, title: "Continue".tr, btnColor: ConstantColors.primary, txtColor: Colors.white, onPress: () async {
-                      await controller.getDurationDistance(departureLatLong!, destinationLatLong!).then((durationValue) async {
+                    child: ButtonThem.buildButton(context,
+                        btnHeight: 40,
+                        title: "Continue".tr,
+                        btnColor: ConstantColors.primary,
+                        txtColor: Colors.white, onPress: () async {
+                      await controller
+                          .getDurationDistance(
+                              departureLatLong!, destinationLatLong!)
+                          .then((durationValue) async {
                         if (durationValue != null) {
-                          await controller.getUserPendingPayment().then((value) async {
+                          await controller
+                              .getUserPendingPayment()
+                              .then((value) async {
                             if (value != null) {
                               if (value['success'] == "success") {
                                 if (value['data']['amount'] != 0) {
                                   _pendingPaymentDialog(context);
                                 } else {
                                   if (Constant.distanceUnit == "KM") {
-                                    controller.distance.value = durationValue['rows'].first['elements'].first['distance']['value'] / 1000.00;
+                                    controller.distance.value =
+                                        durationValue['rows']
+                                                .first['elements']
+                                                .first['distance']['value'] /
+                                            1000.00;
                                   } else {
-                                    controller.distance.value = durationValue['rows'].first['elements'].first['distance']['value'] / 1609.34;
+                                    controller.distance.value =
+                                        durationValue['rows']
+                                                .first['elements']
+                                                .first['distance']['value'] /
+                                            1609.34;
                                   }
 
-                                  controller.duration.value = durationValue['rows'].first['elements'].first['duration']['text'];
+                                  controller.duration.value =
+                                      durationValue['rows']
+                                          .first['elements']
+                                          .first['duration']['text'];
                                   Get.back();
                                   tripOptionBottomSheet(context);
                                 }
                               } else {
                                 if (Constant.distanceUnit == "KM") {
-                                  controller.distance.value = durationValue['rows'].first['elements'].first['distance']['value'] / 1000.00;
+                                  controller.distance.value =
+                                      durationValue['rows']
+                                              .first['elements']
+                                              .first['distance']['value'] /
+                                          1000.00;
                                 } else {
-                                  controller.distance.value = durationValue['rows'].first['elements'].first['distance']['value'] / 1609.34;
+                                  controller.distance.value =
+                                      durationValue['rows']
+                                              .first['elements']
+                                              .first['distance']['value'] /
+                                          1609.34;
                                 }
-                                controller.duration.value = durationValue['rows'].first['elements'].first['duration']['text'];
+                                controller.duration.value =
+                                    durationValue['rows']
+                                        .first['elements']
+                                        .first['duration']['text'];
                                 Get.back();
                                 tripOptionBottomSheet(context);
                               }
@@ -411,6 +500,8 @@ class _HomeScreenState extends State<HomeScreen> {
   final passengerController = TextEditingController();
 
   tripOptionBottomSheet(BuildContext context) {
+    controller.tripOptionCategory.value = "General";
+    passengerController.text = "1";
     return showModalBottomSheet(
         context: context,
         isDismissible: false,
@@ -418,201 +509,220 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.transparent,
         builder: (context) {
           return Container(
-            decoration: const BoxDecoration(color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(15))),
-            margin: const EdgeInsets.all(10),
-            child: StatefulBuilder(builder: (context, setState) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 20),
-                child: Obx(
-                  () => Padding(
-                    padding: MediaQuery.of(context).viewInsets,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 10),
-                          child: Text(
-                            "Trip option",
-                            style: TextStyle(fontSize: 18, color: Colors.black),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.grey, width: 1.0),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 10),
-                              child: DropdownButton<String>(
-                                items: <String>[
-                                  'General',
-                                  'Business',
-                                  'Executive',
-                                ].map<DropdownMenuItem<String>>((String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(value),
-                                  ); //DropMenuItem
-                                }).toList(),
-                                value: controller.tripOptionCategory.value,
-                                onChanged: (newValue) {
-                                  controller.tripOptionCategory.value = newValue!;
-                                },
-                                underline: Container(),
-                                //OnChange
-                                isExpanded: true,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextField(
-                            controller: passengerController,
-                            keyboardType: TextInputType.number,
-                            decoration: const InputDecoration(
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey, width: 1.0),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey, width: 1.0),
-                              ),
-                              hintText: 'How many passenger',
-                            ),
-                          ),
-                        ),
-                        ListView.builder(
-                            physics: const NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: controller.addChildList.length,
-                            itemBuilder: (_, index) {
-                              return Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: TextField(
-                                  controller: controller.addChildList[index].editingController,
-                                  keyboardType: TextInputType.number,
-                                  decoration: const InputDecoration(
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.grey, width: 1.0),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.grey, width: 1.0),
-                                    ),
-                                    hintText: 'Any children ? Age of child',
-                                  ),
-                                ),
-                              );
-                            }),
-                        Visibility(
-                          visible: controller.addChildList.length < 3,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
+              decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(Radius.circular(15))),
+              margin: const EdgeInsets.all(10),
+              child: StatefulBuilder(builder: (context, setState) {
+                return Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 15.0, vertical: 20),
+                    child: Padding(
+                      padding: MediaQuery.of(context).viewInsets,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // const Padding(
+                          //   padding: EdgeInsets.symmetric(vertical: 10),
+                          //   child: Text(
+                          //     "Trip option",
+                          //     style: TextStyle(fontSize: 18, color: Colors.black),
+                          //   ),
+                          // ),
+                          // Padding(
+                          //   padding: const EdgeInsets.all(8.0),
+                          //   child: Container(
+                          //     decoration: BoxDecoration(
+                          //       border:
+                          //           Border.all(color: Colors.grey, width: 1.0),
+                          //     ),
+                          //     child: Padding(
+                          //       padding:
+                          //           const EdgeInsets.symmetric(horizontal: 10),
+                          //       child: DropdownButton<String>(
+                          //         items: <String>[
+                          //           'General',
+                          //           'Business',
+                          //           'Executive',
+                          //         ].map<DropdownMenuItem<String>>((String value) {
+                          //           return DropdownMenuItem<String>(
+                          //             value: value,
+                          //             child: Text(value),
+                          //           ); //DropMenuItem
+                          //         }).toList(),
+                          //         value: controller.tripOptionCategory.value,
+                          //         onChanged: (newValue) {
+                          //           controller.tripOptionCategory.value =
+                          //               newValue!;
+                          //         },
+                          //         underline: Container(),
+                          //         //OnChange
+                          //         isExpanded: true,
+                          //       ),
+                          //     ),
+                          //   ),
+                          // ),
+                          // Padding(
+                          //   padding: const EdgeInsets.all(8.0),
+                          //   child: TextField(
+                          //     controller: passengerController,
+                          //     keyboardType: TextInputType.number,
+                          //     decoration: const InputDecoration(
+                          //       focusedBorder: OutlineInputBorder(
+                          //         borderSide: BorderSide(
+                          //             color: Colors.grey, width: 1.0),
+                          //       ),
+                          //       enabledBorder: OutlineInputBorder(
+                          //         borderSide: BorderSide(
+                          //             color: Colors.grey, width: 1.0),
+                          //       ),
+                          //       hintText: 'How many passenger',
+                          //     ),
+                          //   ),
+                          // ),
+                          // ListView.builder(
+                          //     physics: const NeverScrollableScrollPhysics(),
+                          //     shrinkWrap: true,
+                          //     itemCount: controller.addChildList.length,
+                          //     itemBuilder: (_, index) {
+                          //       return Padding(
+                          //         padding: const EdgeInsets.all(8.0),
+                          //         child: TextField(
+                          //           controller: controller
+                          //               .addChildList[index].editingController,
+                          //           keyboardType: TextInputType.number,
+                          //           decoration: const InputDecoration(
+                          //             focusedBorder: OutlineInputBorder(
+                          //               borderSide: BorderSide(
+                          //                   color: Colors.grey, width: 1.0),
+                          //             ),
+                          //             enabledBorder: OutlineInputBorder(
+                          //               borderSide: BorderSide(
+                          //                   color: Colors.grey, width: 1.0),
+                          //             ),
+                          //             hintText: 'Any children ? Age of child',
+                          //           ),
+                          //         ),
+                          //       );
+                          //     }),
+                          // Visibility(
+                          //   visible: controller.addChildList.length < 3,
+                          //   child: Padding(
+                          //     padding: const EdgeInsets.all(8.0),
+                          //     child: Row(
+                          //       mainAxisAlignment: MainAxisAlignment.end,
+                          //       children: [
+                          //         GestureDetector(
+                          //           onTap: () {
+                          //             if (controller.addChildList.length < 3) {
+                          //               controller.addChildList.add(
+                          //                   AddChildModel(
+                          //                       editingController:
+                          //                           TextEditingController()));
+                          //             }
+                          //           },
+                          //           child: SizedBox(
+                          //             width: 60,
+                          //             child: Row(
+                          //               children: [
+                          //                 Icon(
+                          //                   Icons.add,
+                          //                   color: ConstantColors.primary,
+                          //                 ),
+                          //                 const Text("Add"),
+                          //               ],
+                          //             ),
+                          //           ),
+                          //         ),
+                          //       ],
+                          //     ),
+                          //   ),
+                          // ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10),
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    if (controller.addChildList.length < 3) {
-                                      controller.addChildList.add(AddChildModel(editingController: TextEditingController()));
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10),
+                                  child: ButtonThem.buildIconButton(context,
+                                      iconSize: 16.0,
+                                      icon: Icons.arrow_back_ios,
+                                      iconColor: Colors.black,
+                                      btnHeight: 40,
+                                      btnWidthRatio: 0.25,
+                                      title: "Back",
+                                      btnColor: ConstantColors.yellow,
+                                      txtColor: Colors.black, onPress: () {
+                                    Get.back();
+                                  }),
+                                ),
+                                Expanded(
+                                  child: ButtonThem.buildButton(context,
+                                      btnHeight: 40,
+                                      title: "Book Now".tr,
+                                      btnColor: ConstantColors.primary,
+                                      txtColor: Colors.white,
+                                      onPress: () async {
+                                    if (passengerController.text.isEmpty) {
+                                      ShowToastDialog.showToast(
+                                          "Please Enter Passenger");
+                                    } else {
+                                      await controller
+                                          .getVehicleCategory()
+                                          .then((value) {
+                                        if (value != null) {
+                                          if (value.success == "Success") {
+                                            Get.back();
+                                            // List tripPrice = [];
+                                            // for (int i = 0;
+                                            //     i < value.vehicleData!.length;
+                                            //     i++) {
+                                            //   tripPrice.add(0.0);
+                                            // }
+                                            // if (value.vehicleData!.isNotEmpty) {
+                                            //   for (int i = 0;
+                                            //       i < value.vehicleData!.length;
+                                            //       i++) {
+                                            //     if (controller.distance.value >
+                                            //         value.vehicleData![i]
+                                            //             .minimumDeliveryChargesWithin!
+                                            //             .toDouble()) {
+                                            //       tripPrice.add((controller
+                                            //                   .distance.value *
+                                            //               value.vehicleData![i]
+                                            //                   .deliveryCharges!)
+                                            //           .toDouble()
+                                            //           .toStringAsFixed(
+                                            //               Constant.decimal));
+                                            //     } else {
+                                            //       tripPrice.add(value
+                                            //           .vehicleData![i]
+                                            //           .minimumDeliveryCharges!
+                                            //           .toDouble()
+                                            //           .toStringAsFixed(
+                                            //               Constant.decimal));
+                                            //     }
+                                            //   }
+                                            // }
+                                            chooseVehicleBottomSheet(
+                                              context,
+                                              value,
+                                            );
+                                          }
+                                        }
+                                      });
                                     }
-                                  },
-                                  child: SizedBox(
-                                    width: 60,
-                                    child: Row(
-                                      children: [
-                                        Icon(
-                                          Icons.add,
-                                          color: ConstantColors.primary,
-                                        ),
-                                        const Text("Add"),
-                                      ],
-                                    ),
-                                  ),
+                                  }),
                                 ),
                               ],
                             ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10),
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 10),
-                                child: ButtonThem.buildIconButton(context,
-                                    iconSize: 16.0,
-                                    icon: Icons.arrow_back_ios,
-                                    iconColor: Colors.black,
-                                    btnHeight: 40,
-                                    btnWidthRatio: 0.25,
-                                    title: "Back",
-                                    btnColor: ConstantColors.yellow,
-                                    txtColor: Colors.black, onPress: () {
-                                  Get.back();
-                                }),
-                              ),
-                              Expanded(
-                                child: ButtonThem.buildButton(context, btnHeight: 40, title: "Book Now".tr, btnColor: ConstantColors.primary, txtColor: Colors.white, onPress: () async {
-                                  if (passengerController.text.isEmpty) {
-                                    ShowToastDialog.showToast("Please Enter Passenger");
-                                  } else {
-                                    await controller.getVehicleCategory().then((value) {
-                                      if (value != null) {
-                                        if (value.success == "Success") {
-                                          Get.back();
-                                          // List tripPrice = [];
-                                          // for (int i = 0;
-                                          //     i < value.vehicleData!.length;
-                                          //     i++) {
-                                          //   tripPrice.add(0.0);
-                                          // }
-                                          // if (value.vehicleData!.isNotEmpty) {
-                                          //   for (int i = 0;
-                                          //       i < value.vehicleData!.length;
-                                          //       i++) {
-                                          //     if (controller.distance.value >
-                                          //         value.vehicleData![i]
-                                          //             .minimumDeliveryChargesWithin!
-                                          //             .toDouble()) {
-                                          //       tripPrice.add((controller
-                                          //                   .distance.value *
-                                          //               value.vehicleData![i]
-                                          //                   .deliveryCharges!)
-                                          //           .toDouble()
-                                          //           .toStringAsFixed(
-                                          //               Constant.decimal));
-                                          //     } else {
-                                          //       tripPrice.add(value
-                                          //           .vehicleData![i]
-                                          //           .minimumDeliveryCharges!
-                                          //           .toDouble()
-                                          //           .toStringAsFixed(
-                                          //               Constant.decimal));
-                                          //     }
-                                          //   }
-                                          // }
-                                          chooseVehicleBottomSheet(
-                                            context,
-                                            value,
-                                          );
-                                        }
-                                      }
-                                    });
-                                  }
-                                }),
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            }),
-          );
+                          )
+                        ],
+                      ),
+                    ));
+              }));
         });
   }
 
@@ -636,7 +746,8 @@ class _HomeScreenState extends State<HomeScreen> {
             margin: const EdgeInsets.all(10),
             child: StatefulBuilder(builder: (context, setState) {
               return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 20),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15.0, vertical: 20),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -656,15 +767,18 @@ class _HomeScreenState extends State<HomeScreen> {
                         Expanded(
                           child: Row(
                             children: [
-                              Image.asset("assets/icons/ic_distance.png", height: 24, width: 24),
+                              Image.asset("assets/icons/ic_distance.png",
+                                  height: 24, width: 24),
                               const Padding(
                                 padding: EdgeInsets.only(left: 10),
-                                child: Text("Distance", style: TextStyle(fontSize: 16)),
+                                child: Text("Distance",
+                                    style: TextStyle(fontSize: 16)),
                               )
                             ],
                           ),
                         ),
-                        Text("${controller.distance.value.toStringAsFixed(2)} ${Constant.distanceUnit}")
+                        Text(
+                            "${controller.distance.value.toStringAsFixed(2)} ${Constant.distanceUnit}")
                       ],
                     ),
                     Divider(
@@ -679,54 +793,103 @@ class _HomeScreenState extends State<HomeScreen> {
                             return Obx(
                               () => InkWell(
                                 onTap: () {
-                                  controller.vehicleData = vehicleCategoryModel.vehicleData![index];
-                                  controller.selectedVehicle.value = vehicleCategoryModel.vehicleData![index].id.toString();
+                                  controller.vehicleData =
+                                      vehicleCategoryModel.vehicleData![index];
+                                  controller.selectedVehicle.value =
+                                      vehicleCategoryModel
+                                          .vehicleData![index].id
+                                          .toString();
                                 },
                                 child: Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 10, horizontal: 10),
                                   child: Container(
                                     decoration: BoxDecoration(
-                                        color: controller.selectedVehicle.value == vehicleCategoryModel.vehicleData![index].id.toString() ? ConstantColors.primary : Colors.black.withOpacity(0.10),
+                                        color: controller
+                                                    .selectedVehicle.value ==
+                                                vehicleCategoryModel
+                                                    .vehicleData![index].id
+                                                    .toString()
+                                            ? ConstantColors.primary
+                                            : Colors.black.withOpacity(0.10),
                                         borderRadius: BorderRadius.circular(8)),
                                     child: Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 16, vertical: 10),
                                       child: Row(
                                         children: [
                                           CachedNetworkImage(
-                                            imageUrl: vehicleCategoryModel.vehicleData![index].image.toString(),
+                                            imageUrl: vehicleCategoryModel
+                                                .vehicleData![index].image
+                                                .toString(),
                                             fit: BoxFit.fill,
                                             width: 80,
                                             height: 50,
-                                            placeholder: (context, url) => Constant.loader(),
-                                            errorWidget: (context, url, error) => const Icon(Icons.error),
+                                            placeholder: (context, url) =>
+                                                Constant.loader(),
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    const Icon(Icons.error),
                                           ),
                                           Expanded(
                                             child: Row(
                                               children: [
                                                 Expanded(
                                                   child: Padding(
-                                                    padding: const EdgeInsets.only(left: 10),
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 10),
                                                     child: Text(
-                                                      vehicleCategoryModel.vehicleData![index].libelle.toString(),
-                                                      textAlign: TextAlign.start,
+                                                      vehicleCategoryModel
+                                                          .vehicleData![index]
+                                                          .libelle
+                                                          .toString(),
+                                                      textAlign:
+                                                          TextAlign.start,
                                                       style: TextStyle(
                                                           fontSize: 18,
-                                                          color: controller.selectedVehicle.value == vehicleCategoryModel.vehicleData![index].id.toString() ? Colors.white : Colors.black,
-                                                          fontWeight: FontWeight.w500),
+                                                          color: controller
+                                                                      .selectedVehicle
+                                                                      .value ==
+                                                                  vehicleCategoryModel
+                                                                      .vehicleData![
+                                                                          index]
+                                                                      .id
+                                                                      .toString()
+                                                              ? Colors.white
+                                                              : Colors.black,
+                                                          fontWeight:
+                                                              FontWeight.w500),
                                                     ),
                                                   ),
                                                 ),
                                                 Padding(
-                                                  padding: const EdgeInsets.only(top: 5),
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 5),
                                                   child: Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
                                                     children: [
                                                       Text(
-                                                        controller.duration.value,
-                                                        textAlign: TextAlign.center,
+                                                        controller
+                                                            .duration.value,
+                                                        textAlign:
+                                                            TextAlign.center,
                                                         style: TextStyle(
-                                                          color: controller.selectedVehicle.value == vehicleCategoryModel.vehicleData![index].id.toString() ? Colors.white : Colors.black,
+                                                          color: controller
+                                                                      .selectedVehicle
+                                                                      .value ==
+                                                                  vehicleCategoryModel
+                                                                      .vehicleData![
+                                                                          index]
+                                                                      .id
+                                                                      .toString()
+                                                              ? Colors.white
+                                                              : Colors.black,
                                                         ),
                                                       ),
                                                       // Text(
@@ -781,14 +944,26 @@ class _HomeScreenState extends State<HomeScreen> {
                             }),
                           ),
                           Expanded(
-                            child: ButtonThem.buildButton(context, btnHeight: 40, title: "Book Now".tr, btnColor: ConstantColors.primary, txtColor: Colors.white, onPress: () async {
+                            child: ButtonThem.buildButton(context,
+                                btnHeight: 40,
+                                title: "Book Now".tr,
+                                btnColor: ConstantColors.primary,
+                                txtColor: Colors.white, onPress: () async {
                               if (controller.selectedVehicle.value.isNotEmpty) {
                                 double cout = 0.0;
 
-                                if (controller.distance.value > controller.vehicleData!.minimumDeliveryChargesWithin!.toDouble()) {
-                                  cout = (controller.distance.value * controller.vehicleData!.deliveryCharges!).toDouble();
+                                if (controller.distance.value >
+                                    controller.vehicleData!
+                                        .minimumDeliveryChargesWithin!
+                                        .toDouble()) {
+                                  cout = (controller.distance.value *
+                                          controller
+                                              .vehicleData!.deliveryCharges!)
+                                      .toDouble();
                                 } else {
-                                  cout = controller.vehicleData!.minimumDeliveryCharges!.toDouble();
+                                  cout = controller
+                                      .vehicleData!.minimumDeliveryCharges!
+                                      .toDouble();
                                 }
 
                                 // double cout = double.parse(controller
@@ -825,18 +1000,26 @@ class _HomeScreenState extends State<HomeScreen> {
                                 //               .toString()));
                                 // }
 
-                                await controller.getDriverDetails(controller.vehicleData!.id.toString(), departureLatLong!.latitude.toString(), departureLatLong!.longitude.toString()).then((value) {
+                                await controller
+                                    .getDriverDetails(
+                                        controller.vehicleData!.id.toString(),
+                                        departureLatLong!.latitude.toString(),
+                                        departureLatLong!.longitude.toString())
+                                    .then((value) {
                                   if (value != null) {
                                     if (value.success == "Success") {
                                       Get.back();
-                                      conformDataBottomSheet(context, value, cout);
+                                      conformDataBottomSheet(
+                                          context, value, cout);
                                     } else {
-                                      ShowToastDialog.showToast("Driver not available");
+                                      ShowToastDialog.showToast(
+                                          "Driver not available");
                                     }
                                   }
                                 });
                               } else {
-                                ShowToastDialog.showToast("Please select Vehicle Type");
+                                ShowToastDialog.showToast(
+                                    "Please select Vehicle Type");
                               }
                             }),
                           ),
@@ -851,7 +1034,8 @@ class _HomeScreenState extends State<HomeScreen> {
         });
   }
 
-  conformDataBottomSheet(BuildContext context, DriverModel driverModel, double tripPrice) {
+  conformDataBottomSheet(
+      BuildContext context, DriverModel driverModel, double tripPrice) {
     return showModalBottomSheet(
         context: context,
         isScrollControlled: true,
@@ -859,11 +1043,14 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.transparent,
         builder: (context) {
           return Container(
-            decoration: const BoxDecoration(color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(15))),
+            decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(Radius.circular(15))),
             margin: const EdgeInsets.all(10),
             child: StatefulBuilder(builder: (context, setState) {
               return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 20),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15.0, vertical: 20),
                 child: Obx(
                   () => Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -882,8 +1069,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                 fit: BoxFit.cover,
                                 height: 72,
                                 width: 72,
-                                placeholder: (context, url) => Constant.loader(),
-                                errorWidget: (context, url, error) => const Icon(Icons.error),
+                                placeholder: (context, url) =>
+                                    Constant.loader(),
+                                errorWidget: (context, url, error) =>
+                                    const Icon(Icons.error),
                               ),
                             ),
                           ),
@@ -894,11 +1083,17 @@ class _HomeScreenState extends State<HomeScreen> {
                               children: [
                                 Text(
                                   driverModel.data![0].prenom.toString(),
-                                  style: TextStyle(fontSize: 16, color: ConstantColors.titleTextColor, fontWeight: FontWeight.w800),
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      color: ConstantColors.titleTextColor,
+                                      fontWeight: FontWeight.w800),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.only(top: 3),
-                                  child: StarRating(size: 18, rating: driverModel.data![0].moyenne!, color: ConstantColors.yellow),
+                                  child: StarRating(
+                                      size: 18,
+                                      rating: driverModel.data![0].moyenne!,
+                                      color: ConstantColors.yellow),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.only(top: 3),
@@ -916,7 +1111,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             children: [
                               InkWell(
                                 onTap: () {
-                                  Constant.makePhoneCall(driverModel.data![0].toString());
+                                  Constant.makePhoneCall(
+                                      driverModel.data![0].toString());
                                 },
                                 child: ClipOval(
                                   child: Container(
@@ -959,17 +1155,27 @@ class _HomeScreenState extends State<HomeScreen> {
                                     context,
                                   );
                                 },
-                                child: buildDetails(title: controller.paymentMethodType.value, value: 'Payment'),
+                                child: buildDetails(
+                                    title: controller.paymentMethodType.value,
+                                    value: 'Payment'),
                               ),
                             ),
                             const SizedBox(
                               width: 10,
                             ),
-                            Expanded(child: buildDetails(title: controller.duration.value, value: 'Duration')),
+                            Expanded(
+                                child: buildDetails(
+                                    title: controller.duration.value,
+                                    value: 'Duration')),
                             const SizedBox(
                               width: 10,
                             ),
-                            Expanded(child: buildDetails(title: "${Constant.currency} ${tripPrice.toStringAsFixed(Constant.decimal)}", value: 'Trip Price', txtColor: ConstantColors.primary)),
+                            Expanded(
+                                child: buildDetails(
+                                    title:
+                                        "${Constant.currency} ${tripPrice.toStringAsFixed(Constant.decimal)}",
+                                    value: 'Trip Price',
+                                    txtColor: ConstantColors.primary)),
                           ],
                         ),
                       ),
@@ -983,7 +1189,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             opacity: 0.6,
                             child: Text(
                               "Cab Details:",
-                              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                              style: TextStyle(
+                                  fontSize: 12, fontWeight: FontWeight.w500),
                             ),
                           ),
                           Text(
@@ -1004,7 +1211,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           Text(
                             driverModel.data![0].numberplate.toString(),
-                            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                            style: const TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.w600),
                           ),
                         ],
                       ),
@@ -1027,20 +1235,39 @@ class _HomeScreenState extends State<HomeScreen> {
                                 title: "Back",
                                 btnColor: ConstantColors.yellow,
                                 txtColor: Colors.black, onPress: () async {
-                              await controller.getVehicleCategory().then((value) {
+                              await controller
+                                  .getVehicleCategory()
+                                  .then((value) {
                                 if (value != null) {
                                   if (value.success == "Success") {
                                     Get.back();
                                     List tripPrice = [];
-                                    for (int i = 0; i < value.vehicleData!.length; i++) {
+                                    for (int i = 0;
+                                        i < value.vehicleData!.length;
+                                        i++) {
                                       tripPrice.add(0.0);
                                     }
                                     if (value.vehicleData!.isNotEmpty) {
-                                      for (int i = 0; i < value.vehicleData!.length; i++) {
-                                        if (controller.distance.value > value.vehicleData![i].minimumDeliveryChargesWithin!.toDouble()) {
-                                          tripPrice.add((controller.distance.value * value.vehicleData![i].deliveryCharges!).toDouble().toStringAsFixed(Constant.decimal));
+                                      for (int i = 0;
+                                          i < value.vehicleData!.length;
+                                          i++) {
+                                        if (controller.distance.value >
+                                            value.vehicleData![i]
+                                                .minimumDeliveryChargesWithin!
+                                                .toDouble()) {
+                                          tripPrice.add(
+                                              (controller.distance.value *
+                                                      value.vehicleData![i]
+                                                          .deliveryCharges!)
+                                                  .toDouble()
+                                                  .toStringAsFixed(
+                                                      Constant.decimal));
                                         } else {
-                                          tripPrice.add(value.vehicleData![i].minimumDeliveryCharges!.toDouble().toStringAsFixed(Constant.decimal));
+                                          tripPrice.add(value.vehicleData![i]
+                                              .minimumDeliveryCharges!
+                                              .toDouble()
+                                              .toStringAsFixed(
+                                                  Constant.decimal));
                                         }
                                       }
                                     }
@@ -1054,33 +1281,57 @@ class _HomeScreenState extends State<HomeScreen> {
                             }),
                           ),
                           Expanded(
-                            child: ButtonThem.buildButton(context, btnHeight: 40, title: "Book now".tr, btnColor: ConstantColors.primary, txtColor: Colors.white, onPress: () {
-                              if (controller.paymentMethodType.value == "Select Method") {
-                                ShowToastDialog.showToast("Please select payment method");
+                            child: ButtonThem.buildButton(context,
+                                btnHeight: 40,
+                                title: "Book now".tr,
+                                btnColor: ConstantColors.primary,
+                                txtColor: Colors.white, onPress: () {
+                              if (controller.paymentMethodType.value ==
+                                  "Select Method") {
+                                ShowToastDialog.showToast(
+                                    "Please select payment method");
                               } else {
                                 Map<String, String> bodyParams = {
-                                  'user_id': Preferences.getInt(Preferences.userId).toString(),
+                                  'user_id':
+                                      Preferences.getInt(Preferences.userId)
+                                          .toString(),
                                   'lat1': departureLatLong!.latitude.toString(),
-                                  'lng1': departureLatLong!.longitude.toString(),
-                                  'lat2': destinationLatLong!.latitude.toString(),
-                                  'lng2': destinationLatLong!.longitude.toString(),
+                                  'lng1':
+                                      departureLatLong!.longitude.toString(),
+                                  'lat2':
+                                      destinationLatLong!.latitude.toString(),
+                                  'lng2':
+                                      destinationLatLong!.longitude.toString(),
                                   'cout': tripPrice.toString(),
                                   'distance': controller.distance.toString(),
                                   'distance_unit': Constant.distanceUnit,
                                   'duree': controller.duration.toString(),
-                                  'id_conducteur': driverModel.data![0].id.toString(),
-                                  'id_payment': controller.paymentMethodId.value,
+                                  'id_conducteur':
+                                      driverModel.data![0].id.toString(),
+                                  'id_payment':
+                                      controller.paymentMethodId.value,
                                   'depart_name': departureController.text,
-                                  'destination_name': destinationController.text,
+                                  'destination_name':
+                                      destinationController.text,
                                   'place': '',
                                   'number_poeple': passengerController.text,
                                   'image': '',
                                   'image_name': "",
                                   'statut_round': 'no',
-                                  'trip_objective': controller.tripOptionCategory.value,
-                                  'age_children1': controller.addChildList[0].editingController.text,
-                                  'age_children2': controller.addChildList.length == 2 ? controller.addChildList[1].editingController.text : "",
-                                  'age_children3': controller.addChildList.length == 3 ? controller.addChildList[2].editingController.text : "",
+                                  'trip_objective':
+                                      controller.tripOptionCategory.value,
+                                  'age_children1': controller
+                                      .addChildList[0].editingController.text,
+                                  'age_children2':
+                                      controller.addChildList.length == 2
+                                          ? controller.addChildList[1]
+                                              .editingController.text
+                                          : "",
+                                  'age_children3':
+                                      controller.addChildList.length == 3
+                                          ? controller.addChildList[2]
+                                              .editingController.text
+                                          : "",
                                 };
 
                                 controller.bookRide(bodyParams).then((value) {
@@ -1103,11 +1354,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                           builder: (BuildContext context) {
                                             return CustomDialogBox(
                                               title: "",
-                                              descriptions: "Your booking has been sent successfully",
+                                              descriptions:
+                                                  "Your booking has been sent successfully",
                                               onPress: () {
                                                 Get.back();
                                               },
-                                              img: Image.asset('assets/images/green_checked.png'),
+                                              img: Image.asset(
+                                                  'assets/images/green_checked.png'),
                                             );
                                           });
                                     }
@@ -1159,7 +1412,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       InkWell(
                           onTap: () {
                             Map<String, String> bodyParams = {
-                              'id_user_app': Preferences.getInt(Preferences.userId).toString(),
+                              'id_user_app':
+                                  Preferences.getInt(Preferences.userId)
+                                      .toString(),
                               'lat1': departureLatLong!.latitude.toString(),
                               'lng1': departureLatLong!.longitude.toString(),
                               'lat2': destinationLatLong!.latitude.toString(),
@@ -1170,7 +1425,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               'destination_name': destinationController.text,
                               'fav_name': favouriteNameTextController.text,
                             };
-                            controller.setFavouriteRide(bodyParams).then((value) {
+                            controller
+                                .setFavouriteRide(bodyParams)
+                                .then((value) {
                               if (value['success'] == "Success") {
                                 Get.back();
                               } else {
@@ -1203,7 +1460,8 @@ class _HomeScreenState extends State<HomeScreen> {
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: const Text("Cab me"),
-      content: const Text("You have pending payments. Please complete payment before book new trip."),
+      content: const Text(
+          "You have pending payments. Please complete payment before book new trip."),
       actions: [
         okButton,
       ],
@@ -1221,14 +1479,17 @@ class _HomeScreenState extends State<HomeScreen> {
     BuildContext context,
   ) {
     return showModalBottomSheet(
-        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topRight: Radius.circular(15), topLeft: Radius.circular(15))),
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                topRight: Radius.circular(15), topLeft: Radius.circular(15))),
         context: context,
         isScrollControlled: true,
         isDismissible: false,
         builder: (context) {
           return StatefulBuilder(builder: (context, setState) {
             return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 20),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 15.0, vertical: 20),
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -1239,16 +1500,26 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: Colors.grey.shade700,
                     ),
                     Visibility(
-                      visible: controller.paymentSettingModel.value.cash!.isEnabled == "true" ? true : false,
+                      visible: controller
+                                  .paymentSettingModel.value.cash!.isEnabled ==
+                              "true"
+                          ? true
+                          : false,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 3.0, horizontal: 20),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 3.0, horizontal: 20),
                         child: Card(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
                           elevation: controller.cash.value ? 0 : 2,
                           child: RadioListTile(
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8), side: BorderSide(color: controller.cash.value ? ConstantColors.primary : Colors.transparent)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                side: BorderSide(
+                                    color: controller.cash.value
+                                        ? ConstantColors.primary
+                                        : Colors.transparent)),
                             controlAffinity: ListTileControlAffinity.trailing,
                             value: "Cash",
                             groupValue: controller.paymentMethodType.value,
@@ -1264,7 +1535,13 @@ class _HomeScreenState extends State<HomeScreen> {
                               controller.mercadoPago = false.obs;
                               controller.payFast = false.obs;
                               controller.paymentMethodType.value = value!;
-                              controller.paymentMethodId = controller.paymentSettingModel.value.cash!.idPaymentMethod.toString().obs;
+                              controller.paymentMethodId = controller
+                                  .paymentSettingModel
+                                  .value
+                                  .cash!
+                                  .idPaymentMethod
+                                  .toString()
+                                  .obs;
                               Get.back();
                             },
                             selected: controller.cash.value,
@@ -1280,12 +1557,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: Padding(
-                                      padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 10),
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 4.0, horizontal: 10),
                                       child: SizedBox(
                                         width: 80,
                                         height: 35,
                                         child: Padding(
-                                          padding: const EdgeInsets.symmetric(vertical: 6.0),
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 6.0),
                                           child: Image.asset(
                                             "assets/images/cash.png",
                                           ),
@@ -1304,16 +1583,26 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     Visibility(
-                      visible: controller.paymentSettingModel.value.myWallet!.isEnabled == "true" ? true : false,
+                      visible: controller.paymentSettingModel.value.myWallet!
+                                  .isEnabled ==
+                              "true"
+                          ? true
+                          : false,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 3.0, horizontal: 20),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 3.0, horizontal: 20),
                         child: Card(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
                           elevation: controller.wallet.value ? 0 : 2,
                           child: RadioListTile(
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8), side: BorderSide(color: controller.wallet.value ? ConstantColors.primary : Colors.transparent)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                side: BorderSide(
+                                    color: controller.wallet.value
+                                        ? ConstantColors.primary
+                                        : Colors.transparent)),
                             controlAffinity: ListTileControlAffinity.trailing,
                             value: "Wallet",
                             groupValue: controller.paymentMethodType.value,
@@ -1329,7 +1618,13 @@ class _HomeScreenState extends State<HomeScreen> {
                               controller.mercadoPago = false.obs;
                               controller.payFast = false.obs;
                               controller.paymentMethodType.value = value!;
-                              controller.paymentMethodId = controller.paymentSettingModel.value.myWallet!.idPaymentMethod.toString().obs;
+                              controller.paymentMethodId = controller
+                                  .paymentSettingModel
+                                  .value
+                                  .myWallet!
+                                  .idPaymentMethod
+                                  .toString()
+                                  .obs;
                               Get.back();
                             },
                             selected: controller.wallet.value,
@@ -1345,12 +1640,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: Padding(
-                                      padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 10),
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 4.0, horizontal: 10),
                                       child: SizedBox(
                                         width: 80,
                                         height: 35,
                                         child: Padding(
-                                          padding: const EdgeInsets.symmetric(vertical: 6.0),
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 6.0),
                                           child: Image.asset(
                                             "assets/icons/walltet_icons.png",
                                           ),
@@ -1369,16 +1666,26 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     Visibility(
-                      visible: controller.paymentSettingModel.value.strip!.isEnabled == "true" ? true : false,
+                      visible: controller
+                                  .paymentSettingModel.value.strip!.isEnabled ==
+                              "true"
+                          ? true
+                          : false,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 3.0, horizontal: 20),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 3.0, horizontal: 20),
                         child: Card(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
                           elevation: controller.stripe.value ? 0 : 2,
                           child: RadioListTile(
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8), side: BorderSide(color: controller.stripe.value ? ConstantColors.primary : Colors.transparent)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                side: BorderSide(
+                                    color: controller.stripe.value
+                                        ? ConstantColors.primary
+                                        : Colors.transparent)),
                             controlAffinity: ListTileControlAffinity.trailing,
                             value: "Stripe",
                             groupValue: controller.paymentMethodType.value,
@@ -1394,7 +1701,13 @@ class _HomeScreenState extends State<HomeScreen> {
                               controller.mercadoPago = false.obs;
                               controller.payFast = false.obs;
                               controller.paymentMethodType.value = value!;
-                              controller.paymentMethodId = controller.paymentSettingModel.value.strip!.idPaymentMethod.toString().obs;
+                              controller.paymentMethodId = controller
+                                  .paymentSettingModel
+                                  .value
+                                  .strip!
+                                  .idPaymentMethod
+                                  .toString()
+                                  .obs;
                               Get.back();
                             },
                             selected: controller.stripe.value,
@@ -1410,12 +1723,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: Padding(
-                                      padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 10),
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 4.0, horizontal: 10),
                                       child: SizedBox(
                                         width: 80,
                                         height: 35,
                                         child: Padding(
-                                          padding: const EdgeInsets.symmetric(vertical: 6.0),
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 6.0),
                                           child: Image.asset(
                                             "assets/images/stripe.png",
                                           ),
@@ -1434,16 +1749,26 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     Visibility(
-                      visible: controller.paymentSettingModel.value.payStack!.isEnabled == "true" ? true : false,
+                      visible: controller.paymentSettingModel.value.payStack!
+                                  .isEnabled ==
+                              "true"
+                          ? true
+                          : false,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 3.0, horizontal: 20),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 3.0, horizontal: 20),
                         child: Card(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
                           elevation: controller.payStack.value ? 0 : 2,
                           child: RadioListTile(
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8), side: BorderSide(color: controller.payStack.value ? ConstantColors.primary : Colors.transparent)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                side: BorderSide(
+                                    color: controller.payStack.value
+                                        ? ConstantColors.primary
+                                        : Colors.transparent)),
                             controlAffinity: ListTileControlAffinity.trailing,
                             value: "PayStack",
                             groupValue: controller.paymentMethodType.value,
@@ -1459,7 +1784,13 @@ class _HomeScreenState extends State<HomeScreen> {
                               controller.mercadoPago = false.obs;
                               controller.payFast = false.obs;
                               controller.paymentMethodType.value = value!;
-                              controller.paymentMethodId = controller.paymentSettingModel.value.payStack!.idPaymentMethod.toString().obs;
+                              controller.paymentMethodId = controller
+                                  .paymentSettingModel
+                                  .value
+                                  .payStack!
+                                  .idPaymentMethod
+                                  .toString()
+                                  .obs;
                               Get.back();
                             },
                             selected: controller.payStack.value,
@@ -1476,12 +1807,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: Padding(
-                                      padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 10),
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 4.0, horizontal: 10),
                                       child: SizedBox(
                                         width: 80,
                                         height: 35,
                                         child: Padding(
-                                          padding: const EdgeInsets.symmetric(vertical: 6.0),
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 6.0),
                                           child: Image.asset(
                                             "assets/images/paystack.png",
                                           ),
@@ -1500,16 +1833,26 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     Visibility(
-                      visible: controller.paymentSettingModel.value.flutterWave!.isEnabled == "true" ? true : false,
+                      visible: controller.paymentSettingModel.value.flutterWave!
+                                  .isEnabled ==
+                              "true"
+                          ? true
+                          : false,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 3.0, horizontal: 20),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 3.0, horizontal: 20),
                         child: Card(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
                           elevation: controller.flutterWave.value ? 0 : 2,
                           child: RadioListTile(
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8), side: BorderSide(color: controller.flutterWave.value ? ConstantColors.primary : Colors.transparent)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                side: BorderSide(
+                                    color: controller.flutterWave.value
+                                        ? ConstantColors.primary
+                                        : Colors.transparent)),
                             controlAffinity: ListTileControlAffinity.trailing,
                             value: "FlutterWave",
                             groupValue: controller.paymentMethodType.value,
@@ -1525,7 +1868,12 @@ class _HomeScreenState extends State<HomeScreen> {
                               controller.mercadoPago = false.obs;
                               controller.payFast = false.obs;
                               controller.paymentMethodType.value = value!;
-                              controller.paymentMethodId.value = controller.paymentSettingModel.value.flutterWave!.idPaymentMethod.toString();
+                              controller.paymentMethodId.value = controller
+                                  .paymentSettingModel
+                                  .value
+                                  .flutterWave!
+                                  .idPaymentMethod
+                                  .toString();
                               Get.back();
                             },
                             selected: controller.flutterWave.value,
@@ -1541,12 +1889,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: Padding(
-                                      padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 10),
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 4.0, horizontal: 10),
                                       child: SizedBox(
                                         width: 80,
                                         height: 35,
                                         child: Padding(
-                                          padding: const EdgeInsets.symmetric(vertical: 6.0),
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 6.0),
                                           child: Image.asset(
                                             "assets/images/flutterwave.png",
                                           ),
@@ -1565,16 +1915,26 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     Visibility(
-                      visible: controller.paymentSettingModel.value.razorPay!.isEnabled == "true" ? true : false,
+                      visible: controller.paymentSettingModel.value.razorPay!
+                                  .isEnabled ==
+                              "true"
+                          ? true
+                          : false,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 3.0, horizontal: 20),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 3.0, horizontal: 20),
                         child: Card(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
                           elevation: controller.razorPay.value ? 0 : 2,
                           child: RadioListTile(
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8), side: BorderSide(color: controller.razorPay.value ? ConstantColors.primary : Colors.transparent)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                side: BorderSide(
+                                    color: controller.razorPay.value
+                                        ? ConstantColors.primary
+                                        : Colors.transparent)),
                             contentPadding: const EdgeInsets.symmetric(
                               horizontal: 6,
                             ),
@@ -1593,7 +1953,12 @@ class _HomeScreenState extends State<HomeScreen> {
                               controller.mercadoPago = false.obs;
                               controller.payFast = false.obs;
                               controller.paymentMethodType.value = value!;
-                              controller.paymentMethodId.value = controller.paymentSettingModel.value.razorPay!.idPaymentMethod.toString();
+                              controller.paymentMethodId.value = controller
+                                  .paymentSettingModel
+                                  .value
+                                  .razorPay!
+                                  .idPaymentMethod
+                                  .toString();
                               Get.back();
                             },
                             selected: controller.razorPay.value,
@@ -1606,8 +1971,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: Padding(
-                                      padding: const EdgeInsets.symmetric(vertical: 3.0, horizontal: 10),
-                                      child: SizedBox(width: 80, height: 35, child: Image.asset("assets/images/razorpay_@3x.png")),
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 3.0, horizontal: 10),
+                                      child: SizedBox(
+                                          width: 80,
+                                          height: 35,
+                                          child: Image.asset(
+                                              "assets/images/razorpay_@3x.png")),
                                     )),
                                 const SizedBox(
                                   width: 20,
@@ -1621,16 +1991,26 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     Visibility(
-                      visible: controller.paymentSettingModel.value.payFast!.isEnabled == "true" ? true : false,
+                      visible: controller.paymentSettingModel.value.payFast!
+                                  .isEnabled ==
+                              "true"
+                          ? true
+                          : false,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 20),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 4.0, horizontal: 20),
                         child: Card(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
                           elevation: controller.payFast.value ? 0 : 2,
                           child: RadioListTile(
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8), side: BorderSide(color: controller.payFast.value ? ConstantColors.primary : Colors.transparent)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                side: BorderSide(
+                                    color: controller.payFast.value
+                                        ? ConstantColors.primary
+                                        : Colors.transparent)),
                             controlAffinity: ListTileControlAffinity.trailing,
                             value: "PayFast",
                             groupValue: controller.paymentMethodType.value,
@@ -1646,7 +2026,12 @@ class _HomeScreenState extends State<HomeScreen> {
                               controller.mercadoPago = false.obs;
                               controller.payFast = true.obs;
                               controller.paymentMethodType.value = value!;
-                              controller.paymentMethodId.value = controller.paymentSettingModel.value.payFast!.idPaymentMethod.toString();
+                              controller.paymentMethodId.value = controller
+                                  .paymentSettingModel
+                                  .value
+                                  .payFast!
+                                  .idPaymentMethod
+                                  .toString();
                               Get.back();
                             },
                             selected: controller.payFast.value,
@@ -1663,12 +2048,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: Padding(
-                                      padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 10),
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 4.0, horizontal: 10),
                                       child: SizedBox(
                                         width: 80,
                                         height: 35,
                                         child: Padding(
-                                          padding: const EdgeInsets.symmetric(vertical: 6.0),
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 6.0),
                                           child: Image.asset(
                                             "assets/images/payfast.png",
                                           ),
@@ -1687,16 +2074,26 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     Visibility(
-                      visible: controller.paymentSettingModel.value.paytm!.isEnabled == "true" ? true : false,
+                      visible: controller
+                                  .paymentSettingModel.value.paytm!.isEnabled ==
+                              "true"
+                          ? true
+                          : false,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 3.0, horizontal: 20),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 3.0, horizontal: 20),
                         child: Card(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
                           elevation: controller.payTm.value ? 0 : 2,
                           child: RadioListTile(
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8), side: BorderSide(color: controller.payTm.value ? ConstantColors.primary : Colors.transparent)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                side: BorderSide(
+                                    color: controller.payTm.value
+                                        ? ConstantColors.primary
+                                        : Colors.transparent)),
                             contentPadding: const EdgeInsets.symmetric(
                               horizontal: 6,
                             ),
@@ -1715,7 +2112,12 @@ class _HomeScreenState extends State<HomeScreen> {
                               controller.mercadoPago = false.obs;
                               controller.payFast = false.obs;
                               controller.paymentMethodType.value = value!;
-                              controller.paymentMethodId.value = controller.paymentSettingModel.value.paytm!.idPaymentMethod.toString();
+                              controller.paymentMethodId.value = controller
+                                  .paymentSettingModel
+                                  .value
+                                  .paytm!
+                                  .idPaymentMethod
+                                  .toString();
                               Get.back();
                             },
                             selected: controller.payTm.value,
@@ -1728,12 +2130,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: Padding(
-                                      padding: const EdgeInsets.symmetric(vertical: 3.0, horizontal: 10),
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 3.0, horizontal: 10),
                                       child: SizedBox(
                                           width: 80,
                                           height: 35,
                                           child: Padding(
-                                            padding: const EdgeInsets.symmetric(vertical: 3.0),
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 3.0),
                                             child: Image.asset(
                                               "assets/images/paytm_@3x.png",
                                             ),
@@ -1751,16 +2155,26 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     Visibility(
-                      visible: controller.paymentSettingModel.value.mercadopago!.isEnabled == "true" ? true : false,
+                      visible: controller.paymentSettingModel.value.mercadopago!
+                                  .isEnabled ==
+                              "true"
+                          ? true
+                          : false,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 20),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 4.0, horizontal: 20),
                         child: Card(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
                           elevation: controller.mercadoPago.value ? 0 : 2,
                           child: RadioListTile(
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8), side: BorderSide(color: controller.mercadoPago.value ? ConstantColors.primary : Colors.transparent)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                side: BorderSide(
+                                    color: controller.mercadoPago.value
+                                        ? ConstantColors.primary
+                                        : Colors.transparent)),
                             controlAffinity: ListTileControlAffinity.trailing,
                             value: "MercadoPago",
                             groupValue: controller.paymentMethodType.value,
@@ -1776,7 +2190,12 @@ class _HomeScreenState extends State<HomeScreen> {
                               controller.mercadoPago = true.obs;
                               controller.payFast = false.obs;
                               controller.paymentMethodType.value = value!;
-                              controller.paymentMethodId.value = controller.paymentSettingModel.value.mercadopago!.idPaymentMethod.toString();
+                              controller.paymentMethodId.value = controller
+                                  .paymentSettingModel
+                                  .value
+                                  .mercadopago!
+                                  .idPaymentMethod
+                                  .toString();
                               Get.back();
                             },
                             selected: controller.mercadoPago.value,
@@ -1792,12 +2211,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: Padding(
-                                      padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 10),
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 4.0, horizontal: 10),
                                       child: SizedBox(
                                         width: 80,
                                         height: 35,
                                         child: Padding(
-                                          padding: const EdgeInsets.symmetric(vertical: 6.0),
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 6.0),
                                           child: Image.asset(
                                             "assets/images/mercadopago.png",
                                           ),
@@ -1816,16 +2237,26 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     Visibility(
-                      visible: controller.paymentSettingModel.value.payPal!.isEnabled == "true" ? true : false,
+                      visible: controller.paymentSettingModel.value.payPal!
+                                  .isEnabled ==
+                              "true"
+                          ? true
+                          : false,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 3.0, horizontal: 20),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 3.0, horizontal: 20),
                         child: Card(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
                           elevation: controller.paypal.value ? 0 : 2,
                           child: RadioListTile(
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8), side: BorderSide(color: controller.paypal.value ? ConstantColors.primary : Colors.transparent)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                side: BorderSide(
+                                    color: controller.paypal.value
+                                        ? ConstantColors.primary
+                                        : Colors.transparent)),
                             contentPadding: const EdgeInsets.symmetric(
                               horizontal: 6,
                             ),
@@ -1844,7 +2275,12 @@ class _HomeScreenState extends State<HomeScreen> {
                               controller.mercadoPago = false.obs;
                               controller.payFast = false.obs;
                               controller.paymentMethodType.value = value!;
-                              controller.paymentMethodId.value = controller.paymentSettingModel.value.payPal!.idPaymentMethod.toString();
+                              controller.paymentMethodId.value = controller
+                                  .paymentSettingModel
+                                  .value
+                                  .payPal!
+                                  .idPaymentMethod
+                                  .toString();
                               Get.back();
                             },
                             selected: controller.paypal.value,
@@ -1857,13 +2293,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: Padding(
-                                      padding: const EdgeInsets.symmetric(vertical: 3.0, horizontal: 10),
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 3.0, horizontal: 10),
                                       child: SizedBox(
                                           width: 80,
                                           height: 35,
                                           child: Padding(
-                                            padding: const EdgeInsets.symmetric(vertical: 3.0),
-                                            child: Image.asset("assets/images/paypal_@3x.png"),
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 3.0),
+                                            child: Image.asset(
+                                                "assets/images/paypal_@3x.png"),
                                           )),
                                     )),
                                 const SizedBox(
@@ -1973,7 +2412,9 @@ class _HomeScreenState extends State<HomeScreen> {
   buildDetails({title, value, Color txtColor = Colors.black}) {
     return Container(
       height: 110,
-      decoration: BoxDecoration(color: Colors.blueGrey.shade50, borderRadius: BorderRadius.circular(8)),
+      decoration: BoxDecoration(
+          color: Colors.blueGrey.shade50,
+          borderRadius: BorderRadius.circular(8)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -1983,7 +2424,8 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Text(
               title,
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 15, color: txtColor, fontWeight: FontWeight.w600),
+              style: TextStyle(
+                  fontSize: 15, color: txtColor, fontWeight: FontWeight.w600),
             ),
           ),
           const SizedBox(

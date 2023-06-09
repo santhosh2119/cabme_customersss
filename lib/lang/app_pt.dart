@@ -71,5 +71,6 @@ const Map<String, String> ptPO = {
   'message': "Mensagem",
   'submit_query_message': "Envie sua consulta",
   'term_service': "termos de serviço",
-  'privacy_policy': "Política de Privacidade"
+  'privacy_policy': "Política de Privacidade",
+  'my_ride': "My Rides"
 };

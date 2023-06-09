@@ -72,4 +72,5 @@ const Map<String, String> trFR = {
   'submit_query_message': "Soumettez votre requête",
   'privacy_policy': "Politique de confidentialité",
   'term_service': "Conditions d'utilisation",
+  'my_ride': "My Rides"
 };

@@ -25,13 +25,15 @@ class CouponCodeScreen extends StatelessWidget {
                   ? Constant.loader()
                   : controller.coupanCodeList.isEmpty
                       ? Center(
-                          child: Constant.emptyView(context, "No coupons available", false),
+                          child: Constant.emptyView(
+                              context, "No coupons available", false),
                         )
                       : ListView.builder(
                           itemCount: controller.coupanCodeList.length,
                           shrinkWrap: true,
                           itemBuilder: (context, index) {
-                            return buildPromoCodeItem(context, controller.coupanCodeList[index]);
+                            return buildPromoCodeItem(
+                                context, controller.coupanCodeList[index]);
                           }),
             ),
           );
@@ -55,7 +57,9 @@ class CouponCodeScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(left: 35),
               child: Container(
-                decoration: const BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.all(Radius.circular(30))),
+                decoration: const BoxDecoration(
+                    color: Colors.blue,
+                    borderRadius: BorderRadius.all(Radius.circular(30))),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Image.asset(
@@ -75,7 +79,11 @@ class CouponCodeScreen extends StatelessWidget {
                   children: [
                     Text(
                       data.discription.toString(),
-                      style: const TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.w900, letterSpacing: 1),
+                      style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: 1),
                     ),
                     const SizedBox(
                       height: 10,
@@ -84,7 +92,8 @@ class CouponCodeScreen extends StatelessWidget {
                       children: [
                         InkWell(
                           onTap: () {
-                            FlutterClipboard.copy(data.code.toString()).then((value) {
+                            FlutterClipboard.copy(data.code.toString())
+                                .then((value) {
                               final SnackBar snackBar = SnackBar(
                                 content: Text(
                                   "Coupon Code Copied".tr,
@@ -93,7 +102,8 @@ class CouponCodeScreen extends StatelessWidget {
                                 ),
                                 backgroundColor: Colors.black38,
                               );
-                              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
                               // return Navigator.pop(context);
                             });
                           },
@@ -104,9 +114,11 @@ class CouponCodeScreen extends StatelessWidget {
                               strokeWidth: 1,
                               dashPattern: const [3, 3],
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 5),
                                 child: Text(
                                   data.code.toString(),
+                                  style: TextStyle(fontSize: 12),
                                 ),
                               ),
                             ),

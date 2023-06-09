@@ -71,5 +71,6 @@ const Map<String, String> ruRU = {
   'message': "Сообщение",
   'submit_query_message': "Отправить запрос",
   'term_service': "условия обслуживания",
-  'privacy_policy': "Политика конфиденциальности"
+  'privacy_policy': "Политика конфиденциальности",
+  'my_ride': "My Rides"
 };

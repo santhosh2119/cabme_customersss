@@ -71,4 +71,5 @@ const Map<String, String> hiIN = {
   'submit_query_message': "अपनी क्वेरी सबमिट करें",
   'privacy_policy': "गोपनीयता नीति",
   'term_service': "सेवा की शर्तें",
+  'my_ride': "My Rides"
 };

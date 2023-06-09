@@ -68,4 +68,5 @@ const Map<String, String> jaJP = {
   'submit_query_message': "クエリを送信する",
   'privacy_policy': "プライバシーポリシー",
   'term_service': "利用規約",
+  'my_ride': "My Rides"
 };
